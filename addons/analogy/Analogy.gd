@@ -24,6 +24,7 @@ enum client_data_types{
 func _ready():
 	_http_request = HTTPRequest.new()
 	add_child(_http_request)
+	_http_request.use_threads = true
 	_http_request.request_completed.connect(_on_request_completed)
 
 
