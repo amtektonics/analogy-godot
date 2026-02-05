@@ -31,15 +31,18 @@ func _physics_process(delta: float) -> void:
 	if(!_requesting):
 		if(_message_stack.size() > 0):
 			var dat = _message_stack.pop_front()
-			if(dat.has("path") && dat.has("client_id") && dat.has("message")):
-				var status = _http_request.request(_api_url+"/" + dat["path"], ["Content-Type: application/json"], HTTPClient.METHOD_POST, JSON.stringify(dat))
-				_requesting = true
+			if(dat.has("method")):
+				if(dat["method"] == "post"):
+					if(dat.has("path") && dat.has("client_id") && dat.has("message")):
+						var status = _http_request.request(_api_url+"/" + dat["path"], ["Content-Type: application/json"], HTTPClient.METHOD_POST, JSON.stringify(dat))
+						_requesting = true
 
 func log_information(message:String):
 	var json = {
 		"client_id": get_unique_machine_id(),
 		"message": message,
-		"path":"logInfo"
+		"path":"logInfo",
+		"method":"post"
 	}
 	_message_stack.append(json)
 
@@ -47,7 +50,8 @@ func log_warnining(message:String):
 	var json = {
 			"client_id": get_unique_machine_id(),
 			"message": message,
-			"path":"logWarning"
+			"path":"logWarning",
+			"method":"post"
 		}
 	_message_stack.append(json)
 
@@ -55,7 +59,8 @@ func log_error(message:String):
 	var json = {
 			"client_id": get_unique_machine_id(),
 			"message": message,
-			"path": "logError"
+			"path": "logError",
+			"method":"post"
 		}
 	_message_stack.append(json)
 
@@ -64,7 +69,8 @@ func log_client_data(type:client_data_types, message:String):
 			"client_id": get_unique_machine_id(),
 			"message": message,
 			"type":type,
-			"path": "logClientData"
+			"path": "logClientData",
+			"method":"post"
 		}
 	_message_stack.append(json)
 
